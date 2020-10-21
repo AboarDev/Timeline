@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TimeLens</string>
+    <string name="heading">My Timelines</string>
+    <string name="timeline_name">Enter Name</string>
+    <string name="timeline_description">Enter Description (optional)</string>
+    <string name="timeline_showtimes">Show Times</string>
+    <string name="make_timeline">New</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+</resources>
