@@ -26,16 +26,16 @@
         android:layout_marginBottom="16dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/timelineOptions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timelineTitle" />
 
     <ImageButton
-        android:background="@null"
-        android:id="@+id/imageButton"
+        android:id="@+id/timelineOptions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:background="@null"
         android:onClick="showMenu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

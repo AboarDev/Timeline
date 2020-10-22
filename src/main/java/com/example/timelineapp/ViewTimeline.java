@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 
 public class ViewTimeline extends AppCompatActivity {
 
@@ -29,5 +30,11 @@ public class ViewTimeline extends AppCompatActivity {
         EntryAdapter theAdapter = new EntryAdapter();
         entryList.setAdapter(theAdapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.timeline_view_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
