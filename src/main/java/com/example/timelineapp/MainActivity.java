@@ -59,6 +59,33 @@ public class MainActivity extends AppCompatActivity {
                 theIntent.putExtra(Intent.EXTRA_TITLE,title);
                 startActivity(theIntent);
             }
+
+            @Override
+            public void makeMenu(View v, int position) {
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this,v);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.timeline_menu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.delete_timeline:
+                                System.out.println("delete" + position);
+                                mViewModel.deleteTimeline(position);
+                                return true;
+                            case R.id.edit_timeline:
+                                System.out.println("edit" + position);
+                                return true;
+                            default:
+                                return false;
+                        }
+
+                    }
+                });
+                popupMenu.show();
+
+                //showMenu(v);
+            }
         });
         timelineList.setAdapter(theAdapter);
         mViewModel.getAllTimelines().observe(this, new Observer<List<Timeline>>() {
@@ -70,13 +97,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //takeImage();
-    }
-
-    public void showMenu (View view){
-        PopupMenu popupMenu = new PopupMenu(this,view);
-        MenuInflater inflater = popupMenu.getMenuInflater();
-        inflater.inflate(R.menu.timeline_menu,popupMenu.getMenu());
-        popupMenu.show();
     }
 
     public void getContent (View view) {

@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:id="@+id/delete_timeline"
             android:icon="@drawable/ic_baseline_delete_24"
-            android:title="@string/delete"
-            android:onClick="delete"/>
+            android:title="@string/delete" />
 
         <item android:id="@+id/edit_timeline"
             android:icon="@drawable/ic_baseline_edit_24"

@@ -3,6 +3,7 @@ package com.example.timelineapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,12 +24,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
         public abstract void click(int position,String title);
 
+        public abstract void makeMenu (View v, int position);
+
     };
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View mView;
         public TextView mTimelineTitle;
         public TextView mItemCount;
+        public ImageButton mMenu;
         public int mID;
         public String title;
         public MyViewHolder(View theView) {
@@ -36,14 +40,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             mView = theView;
             mTimelineTitle = theView.findViewById(R.id.timelineTitle);
             mItemCount = theView.findViewById(R.id.timelineContents);
-
+            mMenu = theView.findViewById(R.id.timelineOptions);
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     clickHandler.click(mID,title);
                 }
             });
+            mMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickHandler.makeMenu(v,mID);
+                }
+            });
         }
+
     }
 
     void setItems (List<Timeline> timelines){

@@ -48,4 +48,10 @@ public class Repository {
     public LiveData<List<Entry>> getAllEntries (int id) {
         return mEntryDao.getAllWithTimelineID(id);
     }
+
+    public void deleteTimeline (int id) {
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            mTimeLineDao.deleteTimeline(mTimeLineDao.getByID(id));
+        });
+    }
 }
