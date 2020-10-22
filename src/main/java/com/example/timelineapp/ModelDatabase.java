@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Timeline.class, Entry.class, MediaBinding.class}, version = 1)
+@Database(entities = {Timeline.class, Entry.class, MediaBinding.class}, version = 2)
 public abstract class ModelDatabase extends RoomDatabase {
     public abstract TimelineDao timelineDao();
     public abstract EntryDao entryDao();

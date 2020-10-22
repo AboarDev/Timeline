@@ -2,6 +2,8 @@ package com.example.timelineapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import java.util.List;
 
 public class ViewTimeline extends AppCompatActivity {
 
@@ -22,6 +28,8 @@ public class ViewTimeline extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.timelineBar);
         Bundle extras = getIntent().getExtras();
         String name = extras.getString(Intent.EXTRA_TITLE,"Not found");
+        Integer id = extras.getInt(Intent.EXTRA_INDEX,-1);
+        mViewModel.setTimeline(id);
         myToolbar.setTitle(name);
         setSupportActionBar(myToolbar);
 
@@ -29,7 +37,23 @@ public class ViewTimeline extends AppCompatActivity {
         entryList.setLayoutManager(new LinearLayoutManager(this));
         EntryAdapter theAdapter = new EntryAdapter();
         entryList.setAdapter(theAdapter);
+        mViewModel.getAllEntries().observe(this, new Observer<List<Entry>>() {
+            @Override
+            public void onChanged(List<Entry> entries) {
+                theAdapter.setItems(entries);
+            }
+        });
 
+    }
+
+    public void addEntry () {
+        DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
+            @Override
+            public void positive(String title, String description, boolean showTimes) {
+                mViewModel.addEntry(title,description,1);
+            }
+        });
+        dialogFragment.show(getSupportFragmentManager(),"a");
     }
 
     @Override
@@ -37,4 +61,15 @@ public class ViewTimeline extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.timeline_view_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_entries:
+                addEntry();
+            default:
+                return false;
+        }
+    }
+
 }

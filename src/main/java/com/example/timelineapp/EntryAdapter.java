@@ -47,7 +47,12 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
+        if (mEntries != null){
+            Entry entry = mEntries.get(position);
+            holder.mTitle.setText(entry.title);
+            holder.mTextBody.setText(entry.text);
+            holder.mPos.setText(String.valueOf(position + 1)+".");
+        }
     }
 
     @Override

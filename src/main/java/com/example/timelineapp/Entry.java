@@ -15,6 +15,9 @@ public class Entry {
     @NonNull
     public Integer timelineID;
 
+    @NonNull
+    public String title;
+
     public String text;
 
     public Integer position;
@@ -30,8 +33,9 @@ public class Entry {
     public Integer second;
 
 
-    public Entry (Integer timelineID, String text, Integer position) {
+    public Entry (@NonNull Integer timelineID, @NonNull String title, String text, Integer position) {
         this.timelineID = timelineID;
+        this.title = title;
         this.text = text;
         this.position = position;
     }

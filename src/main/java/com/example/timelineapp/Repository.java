@@ -26,9 +26,9 @@ public class Repository {
             mTimeLineDao.insert(theTimeline);
         });
     }
-    public void addEntry(){
+    public void addEntry(Integer timelineID, String title, String text, Integer position){
         ModelDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.insert(new Entry(1,"",1));
+            mEntryDao.insert(new Entry(timelineID,title,text,position));
         });
     }
     public void addMediaBinding(int id,String str, String type){

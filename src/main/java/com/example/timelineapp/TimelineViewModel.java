@@ -9,13 +9,19 @@ import java.util.List;
 
 public class TimelineViewModel extends AndroidViewModel {
     private Repository mRepository;
-    private int selected;
+    private Integer selected;
     public TimelineViewModel (Application application){
         super(application);
         mRepository = new Repository(application);
     }
     public void setTimeline(int i){
         selected = i;
+    }
+    public int getID(){
+        return selected;
+    }
+    public void addEntry (String title, String text, Integer position) {
+        mRepository.addEntry(selected,title,text,position);
     }
     public LiveData<List<Entry>> getAllEntries () {
         return mRepository.getAllEntries(selected);
