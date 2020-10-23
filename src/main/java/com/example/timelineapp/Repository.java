@@ -51,7 +51,18 @@ public class Repository {
 
     public void deleteTimeline (int id) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
+            for (Entry e:mEntryDao.getWithTimelineID(id)) {
+                mEntryDao.delete(e);
+            }
             mTimeLineDao.deleteTimeline(mTimeLineDao.getByID(id));
+        });
+    }
+
+    public void setURI (int id, String uri){
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
+            entry.URI = uri;
+            mEntryDao.update(entry);
         });
     }
 }

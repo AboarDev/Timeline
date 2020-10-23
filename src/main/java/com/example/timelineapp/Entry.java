@@ -20,6 +20,8 @@ public class Entry {
 
     public String text;
 
+    public String URI;
+
     public Integer position;
 
     public Integer year;
@@ -38,6 +40,7 @@ public class Entry {
         this.title = title;
         this.text = text;
         this.position = position;
+        this.URI = null;
     }
     @Ignore
     public Entry (Integer timelineID, String text, Integer year, Integer month, Integer day, Integer minute, Integer second) {

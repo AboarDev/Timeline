@@ -5,10 +5,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +38,13 @@ public class ViewTimeline extends AppCompatActivity {
 
         RecyclerView entryList = findViewById(R.id.entryList);
         entryList.setLayoutManager(new LinearLayoutManager(this));
-        EntryAdapter theAdapter = new EntryAdapter();
+        entryList.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        EntryAdapter theAdapter = new EntryAdapter(new EntryAdapter.ClickHandler() {
+            @Override
+            public void click(int position) {
+                getContent(position);
+            }
+        });
         entryList.setAdapter(theAdapter);
         mViewModel.getAllEntries().observe(this, new Observer<List<Entry>>() {
             @Override
@@ -44,6 +53,31 @@ public class ViewTimeline extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode >= 1 && resultCode == RESULT_OK) {
+            data.hasExtra("data");
+            Bitmap thumbnail = data.getParcelableExtra("data");
+            boolean hasThumb = thumbnail == null;
+            Uri fullPhotoUri = data.getData();
+            String URIString = fullPhotoUri.toString();
+            mViewModel.setURI(requestCode,URIString);
+            //ImageView theImageView = findViewById(R.id.imageView);
+            //theImageView.setImageURI(fullPhotoUri);
+            //mViewModel.saveUri(fullPhotoUri, true);
+        }
+    }
+
+    public void getContent (int id) {
+        final int REQUEST_IMAGE_GET = id;
+        Intent theIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        theIntent.setType("image/*");
+        if (theIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(theIntent, REQUEST_IMAGE_GET);
+        }
     }
 
     public void addEntry () {

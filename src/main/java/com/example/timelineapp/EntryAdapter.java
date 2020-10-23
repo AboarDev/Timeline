@@ -1,5 +1,6 @@
 package com.example.timelineapp;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,24 @@ import java.util.List;
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder>{
 
     private List<Entry> mEntries;
+    private EntryAdapter.ClickHandler clickHandler;
+
+    public EntryAdapter (EntryAdapter.ClickHandler clickHandler){
+        this.clickHandler = clickHandler;
+    }
+    public abstract static class ClickHandler{
+        public abstract void click(int position);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View mView;
         public boolean showImage;
-        public boolean showText;
+        //public boolean showText;
         public TextView mTitle;
         public TextView mPos;
         public TextView mTextBody;
         public ImageView mImage;
+        public int id;
         public MyViewHolder(View theView) {
             super(theView);
             mView = theView;
@@ -30,6 +40,12 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
             mPos = mView.findViewById(R.id.EntryPOS);
             mTextBody = mView.findViewById(R.id.EntryBody);
             mImage = mView.findViewById(R.id.EntryImage);
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickHandler.click(id);
+                }
+            });
         }
     }
 
@@ -51,7 +67,11 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
             Entry entry = mEntries.get(position);
             holder.mTitle.setText(entry.title);
             holder.mTextBody.setText(entry.text);
-            holder.mPos.setText(String.valueOf(position + 1)+".");
+            holder.mPos.setText((position + 1) +".");
+            holder.id = entry.entryID;
+            if (entry.URI != null){
+                holder.mImage.setImageURI(Uri.parse(entry.URI));
+            }
         }
     }
 
@@ -60,7 +80,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
         if (mEntries != null){
             return mEntries.size();
         } else{
-            return 2;
+            return 0;
         }
     }
 }

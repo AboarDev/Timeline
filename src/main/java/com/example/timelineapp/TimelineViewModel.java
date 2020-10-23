@@ -29,4 +29,8 @@ public class TimelineViewModel extends AndroidViewModel {
     public String getTitle () {
         return mRepository.getTimelineWithID(selected).name;
     }
+
+    public void setURI (int id, String uri){
+        mRepository.setURI(id,uri);
+    }
 }
