@@ -2,5 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/settings_button"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="@string/settings"/>
+        android:title="@string/settings"
+        android:onClick="openSettings"/>
 </menu>

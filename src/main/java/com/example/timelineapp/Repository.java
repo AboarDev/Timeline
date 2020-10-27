@@ -58,6 +58,12 @@ public class Repository {
         });
     }
 
+    public void deleteEntry (int id) {
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            mEntryDao.delete(mEntryDao.getWithTimelineIDAndPos(id));
+        });
+    }
+
     public void setURI (int id, String uri){
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Entry entry = mEntryDao.getWithTimelineIDAndPos(id);

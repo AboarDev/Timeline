@@ -20,16 +20,23 @@ public class CreateTimeline extends DialogFragment {
 
     public CreateTimeline(ClickHandler theHandler){
         handler = theHandler;
+        this.message = getString(R.string.make_timeline);
+    }
+    public CreateTimeline(ClickHandler theHandler, String message){
+        handler = theHandler;
+        this.message = message;
     }
 
     private ClickHandler handler;
+
+    private String message;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.dialog_make_timeline,null))
-                .setMessage("Add Timeline")
+                .setMessage(this.message)
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -23,6 +23,9 @@ public class TimelineViewModel extends AndroidViewModel {
     public void addEntry (String title, String text, Integer position) {
         mRepository.addEntry(selected,title,text,position);
     }
+    public void deleteEntry (int id) {
+        mRepository.deleteEntry(id);
+    }
     public LiveData<List<Entry>> getAllEntries () {
         return mRepository.getAllEntries(selected);
     }

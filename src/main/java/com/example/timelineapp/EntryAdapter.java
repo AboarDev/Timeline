@@ -1,7 +1,9 @@
 package com.example.timelineapp;
 
 import android.net.Uri;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,7 +23,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
         this.clickHandler = clickHandler;
     }
     public abstract static class ClickHandler{
-        public abstract void click(int position);
+        public abstract void click(View v,int position);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -43,7 +45,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickHandler.click(id);
+                    clickHandler.click(v,id);
                 }
             });
         }
@@ -67,10 +69,15 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
             Entry entry = mEntries.get(position);
             holder.mTitle.setText(entry.title);
             holder.mTextBody.setText(entry.text);
-            holder.mPos.setText((position + 1) +".");
+            //holder.mPos.setText((position + 1) +".");
+            holder.mPos.setText("30/1/2020 - 10:45 am");
             holder.id = entry.entryID;
             if (entry.URI != null){
                 holder.mImage.setImageURI(Uri.parse(entry.URI));
+                holder.mImage.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.mImage.setVisibility(View.GONE);
             }
         }
     }

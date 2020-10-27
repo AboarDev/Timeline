@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-        <activity android:name=".editTimeline"></activity>
+        <activity android:name=".Settings"></activity>
+        <activity android:name=".editTimeline" />
         <activity android:name=".ViewTimeline" />
         <activity android:name=".MainActivity">
             <intent-filter>

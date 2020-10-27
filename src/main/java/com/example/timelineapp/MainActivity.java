@@ -99,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
         //takeImage();
     }
 
+    public void openSettings (MenuItem menuItem){
+        Intent theIntent = new Intent(MainActivity.this, Settings.class);
+        startActivity(theIntent);
+    }
+
     public void getContent (View view) {
         final int REQUEST_IMAGE_GET = 1;
 
