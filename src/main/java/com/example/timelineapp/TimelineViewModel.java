@@ -36,4 +36,8 @@ public class TimelineViewModel extends AndroidViewModel {
     public void setURI (int id, String uri){
         mRepository.setURI(id,uri);
     }
+
+    public void editEntry(int id, String title, String text){
+        mRepository.editEntry(id,title,text);
+    }
 }

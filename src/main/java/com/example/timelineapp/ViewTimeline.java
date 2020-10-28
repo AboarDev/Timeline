@@ -85,6 +85,9 @@ public class ViewTimeline extends AppCompatActivity {
                             case R.id.new_image:
                                 takeImage(position);
                                 return true;
+                            case R.id.edit_entry:
+                                addEntry(position,true);
+                                return true;
                             default:
                                 return false;
                         }
@@ -162,13 +165,30 @@ public class ViewTimeline extends AppCompatActivity {
         }
     }
 
-    public void addEntry () {
+    public void addEntry (Integer id,boolean edit) {
         DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
             @Override
             public void positive(String title, String description, boolean showTimes) {
-                mViewModel.addEntry(title,description,1);
+                if (!edit){
+                    mViewModel.addEntry(title,description,1);
+                }
+                else{
+                    String newTitle = null;
+                    String newText = null;
+                    if(!title.isEmpty()){
+                        System.out.println("title changed");
+                        newTitle = title;
+                    }
+                    if(!description.isEmpty()){
+                        System.out.println("description changed");
+                        newText = description;
+                    }
+                    if (!title.isEmpty() || !description.isEmpty()) {
+                        mViewModel.editEntry(id, newTitle, newText);
+                    }
+                }
             }
-        },"Add Entry");
+        },R.string.add_entries);
         dialogFragment.show(getSupportFragmentManager(),"a");
     }
 
@@ -182,7 +202,7 @@ public class ViewTimeline extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.add_entries:
-                addEntry();
+                addEntry(null,false);
             default:
                 return false;
         }

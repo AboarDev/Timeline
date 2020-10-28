@@ -71,4 +71,17 @@ public class Repository {
             mEntryDao.update(entry);
         });
     }
+
+    public void editEntry(int id, String title, String text){
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
+            if(title != null){
+                entry.title = title;
+            }
+            if(text != null){
+                entry.text = text;
+            }
+            mEntryDao.update(entry);
+        });
+    }
 }

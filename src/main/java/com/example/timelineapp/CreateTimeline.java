@@ -20,16 +20,16 @@ public class CreateTimeline extends DialogFragment {
 
     public CreateTimeline(ClickHandler theHandler){
         handler = theHandler;
-        this.message = getString(R.string.make_timeline);
+        this.message = R.string.make_timeline;
     }
-    public CreateTimeline(ClickHandler theHandler, String message){
+    public CreateTimeline(ClickHandler theHandler, int message){
         handler = theHandler;
         this.message = message;
     }
 
     private ClickHandler handler;
 
-    private String message;
+    private int message;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -53,7 +53,6 @@ public class CreateTimeline extends DialogFragment {
 
                     }
                 });
-
         return builder.create();
     }
 }
