@@ -27,6 +27,9 @@ public interface EntryDao {
     @Update
     void update (Entry entry);
 
+    @Update
+    void updateMultiple (List<Entry> entries);
+
     @Delete
     void delete(Entry entry);
 }
