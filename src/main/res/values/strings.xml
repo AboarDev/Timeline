@@ -14,5 +14,6 @@
     <string name="new_image">New Image</string>
     <string name="delete_entry">Delete</string>
     <string name="enable_sharing">Enable Sharing</string>
-    <string name="edit_entry">Edit</string>
+    <string name="edit_entry">Edit Entry Text</string>
+    <string name="edit_entry_time">Edit Entry Time</string>
 </resources>

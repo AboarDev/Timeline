@@ -1,7 +1,5 @@
 package com.example.timelineapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -17,8 +15,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.transition.Explode;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,11 +23,9 @@ import android.widget.PopupMenu;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ViewTimeline extends AppCompatActivity {
 
@@ -87,6 +81,9 @@ public class ViewTimeline extends AppCompatActivity {
                                 return true;
                             case R.id.edit_entry:
                                 addEntry(position,true);
+                                return true;
+                            case R.id.edit_entry_time:
+                                editTime();
                                 return true;
                             default:
                                 return false;
@@ -190,6 +187,11 @@ public class ViewTimeline extends AppCompatActivity {
             }
         },R.string.add_entries);
         dialogFragment.show(getSupportFragmentManager(),"a");
+    }
+
+    public void editTime () {
+        DialogFragment dialogFragment = new PickDate();
+        dialogFragment.show(getSupportFragmentManager(),"");
     }
 
     @Override

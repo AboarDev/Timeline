@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import java.io.File;
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
         fileCount = 0;
-        //getContent();
 
         RecyclerView timelineList = findViewById(R.id.timelineList);
         timelineList.setLayoutManager(new LinearLayoutManager(this));
@@ -53,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void click(int position,String title) {
                 System.out.println(position);
-                //mViewModel.setTimeline(position);
                 Intent theIntent = new Intent(MainActivity.this, ViewTimeline.class);
                 theIntent.putExtra(Intent.EXTRA_INDEX,position);
                 theIntent.putExtra(Intent.EXTRA_TITLE,title);
@@ -83,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 popupMenu.show();
-
-                //showMenu(v);
             }
         });
         timelineList.setAdapter(theAdapter);
@@ -95,32 +90,11 @@ public class MainActivity extends AppCompatActivity {
                 theAdapter.setItems(timelines);
             }
         });
-
-        //takeImage();
     }
 
     public void openSettings (MenuItem menuItem){
         Intent theIntent = new Intent(MainActivity.this, Settings.class);
         startActivity(theIntent);
-    }
-
-    public void getContent (View view) {
-        final int REQUEST_IMAGE_GET = 1;
-
-        Intent theIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        theIntent.setType("image/*");
-        if (theIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(theIntent, REQUEST_IMAGE_GET);
-        }
-
-    }
-    public File createFile() throws IOException {
-        File dir = getExternalFilesDir("my_images");
-        File image = File.createTempFile(String.valueOf(fileCount) + "thisisafilename",".jpg",dir);
-        filePath = image.getAbsolutePath();
-
-        fileCount++;
-        return image;
     }
 
     public void newTimeline (View view) {
@@ -134,28 +108,6 @@ public class MainActivity extends AppCompatActivity {
         theFragment.show(getSupportFragmentManager(),"a");
     }
 
-    public void takeImage () {
-        Intent theIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if(theIntent.resolveActivity(getPackageManager()) != null){
-            File image = null;
-            try{
-                image = createFile();
-            } catch (IOException exception){
-
-            }
-            if (image != null){
-                Uri theUri = FileProvider.getUriForFile(this,"com.example.android.fileprovider",image);
-                theIntent.putExtra(MediaStore.EXTRA_OUTPUT, theUri);
-                startActivityForResult(theIntent, 2);
-            }
-        }
-    }
-
-    public void delete (MenuItem menuItem) {
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -165,15 +117,11 @@ public class MainActivity extends AppCompatActivity {
             boolean hasThumb = thumbnail == null;
             Uri fullPhotoUri = data.getData();
             fullPhotoUri.toString();
-            //ImageView theImageView = findViewById(R.id.imageView);
-            //theImageView.setImageURI(fullPhotoUri);
             mViewModel.saveUri(fullPhotoUri, true);
         }
         else if (requestCode == 2 && resultCode == RESULT_OK){
-            //ImageView theImageView = findViewById(R.id.imageView);
             System.out.println(data);
             Uri theUri = Uri.parse(filePath);
-            //theImageView.setImageURI(theUri);
             mViewModel.saveUri(theUri, false);
         }
     }

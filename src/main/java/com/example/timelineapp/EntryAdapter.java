@@ -1,15 +1,12 @@
 package com.example.timelineapp;
 
 import android.net.Uri;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -28,8 +25,6 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View mView;
-        public boolean showImage;
-        //public boolean showText;
         public TextView mTitle;
         public TextView mPos;
         public TextView mTextBody;

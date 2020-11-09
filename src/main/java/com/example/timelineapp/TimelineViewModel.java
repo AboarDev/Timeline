@@ -5,9 +5,12 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class TimelineViewModel extends AndroidViewModel {
+    static SimpleDateFormat formatTime = new SimpleDateFormat("dd/MM/yyyy - h:mm");
     private Repository mRepository;
     private Integer selected;
     public TimelineViewModel (Application application){
@@ -18,7 +21,7 @@ public class TimelineViewModel extends AndroidViewModel {
         selected = i;
     }
     public void addEntry (String title, String text, Integer position) {
-        mRepository.addEntry(selected,title,text,position);
+        mRepository.addEntry(selected,title,text,position,formatTime.format(new Date()));
     }
     public void deleteEntry (int id) {
         mRepository.deleteEntry(id);
