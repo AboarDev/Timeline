@@ -14,19 +14,6 @@ public class AppViewModel extends AndroidViewModel {
         super(application);
         mRepository = new Repository(application);
     }
-    public void saveUri(Uri inp, Boolean isFile){
-        String inpString = inp.toString();
-        /*if (isFile){
-            for (String str: theStrs) {
-                if (str.contentEquals(inpString)){
-                    return;
-                }
-            }
-        }*/
-        //theStrs.add(inpString);
-        mRepository.addMediaBinding(1,inpString,"IMAGE");
-
-    }
 
     public LiveData<List<Timeline>> getAllTimelines () {
         return mRepository.getAllTimelines();

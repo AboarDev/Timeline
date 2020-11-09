@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         theFragment.show(getSupportFragmentManager(),"a");
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -117,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
             boolean hasThumb = thumbnail == null;
             Uri fullPhotoUri = data.getData();
             fullPhotoUri.toString();
-            mViewModel.saveUri(fullPhotoUri, true);
+            //mViewModel.saveUri(fullPhotoUri, true);
         }
         else if (requestCode == 2 && resultCode == RESULT_OK){
             System.out.println(data);
             Uri theUri = Uri.parse(filePath);
-            mViewModel.saveUri(theUri, false);
+            //mViewModel.saveUri(theUri, false);
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {

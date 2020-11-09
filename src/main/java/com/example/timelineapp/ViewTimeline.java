@@ -26,15 +26,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ViewTimeline extends AppCompatActivity {
 
     TimelineViewModel mViewModel;
-
     Map<Integer, Integer> requests;
-
     String filePath;
-
     int fileCount;
 
     public ViewTimeline() {
@@ -51,18 +49,23 @@ public class ViewTimeline extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String name = extras.getString(Intent.EXTRA_TITLE,"Not found");
         Integer id = extras.getInt(Intent.EXTRA_INDEX,-1);
+        mViewModel.getTimeline(id).observe(this, new Observer<Timeline>() {
+            @Override
+            public void onChanged(Timeline timeline) {
+                boolean showTimes = timeline.showTimes;
+            }
+        });
         mViewModel.setTimeline(id);
         myToolbar.setTitle(name);
 
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         RecyclerView entryList = findViewById(R.id.entryList);
         entryList.setLayoutManager(new LinearLayoutManager(this));
         entryList.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         EntryAdapter theAdapter = new EntryAdapter(new EntryAdapter.ClickHandler() {
             @Override
             public void click(View v,int position) {
-                //getContent(position);
                 PopupMenu popupMenu = new PopupMenu(ViewTimeline.this,v);
                 MenuInflater menuInflater = popupMenu.getMenuInflater();
                 menuInflater.inflate(R.menu.entry_context_menu,popupMenu.getMenu());
@@ -94,32 +97,29 @@ public class ViewTimeline extends AppCompatActivity {
             }
         });
         entryList.setAdapter(theAdapter);
-        //getWindow().setExitTransition(new Explode());
+
         mViewModel.getAllEntries().observe(this, new Observer<List<Entry>>() {
             @Override
             public void onChanged(List<Entry> entries) {
                 theAdapter.setItems(entries);
             }
         });
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode >= 1 && requests.get(requestCode) == 1 && resultCode == RESULT_OK) {
+        int requestType = requests.get(requestCode);
+        if (requestCode >= 1 && requestType == 1 && resultCode == RESULT_OK) {
             data.hasExtra("data");
-            Bitmap thumbnail = data.getParcelableExtra("data");
+            //Bitmap thumbnail = data.getParcelableExtra("data");
             Uri fullPhotoUri = data.getData();
             String URIString = fullPhotoUri.toString();
             mViewModel.setURI(requestCode,URIString);
             System.out.println(requests.remove(requestCode));
-        } else if (requests.get(requestCode) == 2 && resultCode == RESULT_OK) {
+        } else if (requestType == 2 && resultCode == RESULT_OK) {
             System.out.println(requests.remove(requestCode));
-            Uri theUri = Uri.parse(filePath);
-            Uri fullPhotoUri = data.getData();
-            mViewModel.setURI(requestCode,filePath);
-            //MediaStore.getMediaUri(this,theUri);
+            //mViewModel.setURI(requestCode,filePath);
         }
     }
 
@@ -127,7 +127,6 @@ public class ViewTimeline extends AppCompatActivity {
         File dir = getExternalFilesDir("my_images");
         File image = File.createTempFile(String.valueOf(fileCount) + "thisisafilename",".jpg",dir);
         filePath = image.getAbsolutePath();
-
         fileCount++;
         return image;
     }
@@ -135,7 +134,6 @@ public class ViewTimeline extends AppCompatActivity {
     public void takeImage (int id) {
         requests.put(id, 2);
         Intent theIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         if(theIntent.resolveActivity(getPackageManager()) != null){
             File image = null;
             try{

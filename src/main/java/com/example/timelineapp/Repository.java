@@ -84,4 +84,8 @@ public class Repository {
             mEntryDao.update(entry);
         });
     }
+
+    public LiveData<Timeline> getByIDLive(int id) {
+        return mTimeLineDao.getByIDLive(id);
+    }
 }

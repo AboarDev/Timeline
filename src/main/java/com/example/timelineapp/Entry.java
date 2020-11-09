@@ -22,6 +22,7 @@ public class Entry {
     public Integer year;
     public Integer month;
     public Integer day;
+    //public Integer hour;
     public Integer minute;
     public Integer second;
 
@@ -34,7 +35,7 @@ public class Entry {
         this.dateTime = dateTime;
     }
     @Ignore
-    public Entry (Integer timelineID, String text, Integer year, Integer month, Integer day, Integer minute, Integer second) {
+    public Entry (@NonNull Integer timelineID, @NonNull String title, String text, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
         this.timelineID = timelineID;
         this.text = text;
         this.position = null;

@@ -24,6 +24,9 @@ public interface TimelineDao {
     @Query("SELECT * from timeline_table where name like (:name)")
     Timeline getByName(String name);
 
+    @Query("SELECT * from timeline_table where timelineID like (:id)")
+    LiveData<Timeline> getByIDLive(int id);
+
     @Insert
     void insert(Timeline timeline);
 

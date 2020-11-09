@@ -29,6 +29,9 @@ public class TimelineViewModel extends AndroidViewModel {
     public LiveData<List<Entry>> getAllEntries () {
         return mRepository.getAllEntries(selected);
     }
+    public LiveData<Timeline> getTimeline (int id) {
+        return mRepository.getByIDLive(id);
+    }
     public String getTitle () {
         return mRepository.getTimelineWithID(selected).name;
     }
