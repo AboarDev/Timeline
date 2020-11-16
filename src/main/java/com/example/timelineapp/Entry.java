@@ -37,7 +37,9 @@ public class Entry {
     @Ignore
     public Entry (@NonNull Integer timelineID, @NonNull String title, String text, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
         this.timelineID = timelineID;
+        this.title = title;
         this.text = text;
+        this.URI = null;
         this.position = null;
     }
 }

@@ -85,6 +85,19 @@ public class Repository {
         });
     }
 
+    public void editTimeline (int id, String name,String description, Boolean showTimes) {
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            Timeline timeline = mTimeLineDao.getByID(id);
+            if (name != null){
+                timeline.name = name;
+            }
+            if (description != null){
+                timeline.description = description;
+            }
+            mTimeLineDao.updateTimeline(timeline);
+        });
+    }
+
     public LiveData<Timeline> getByIDLive(int id) {
         return mTimeLineDao.getByIDLive(id);
     }

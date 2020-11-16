@@ -2,7 +2,6 @@ package com.example.timelineapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,27 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import java.io.File;
-import java.io.IOException;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     AppViewModel mViewModel;
 
-    String filePath;
-
-    int fileCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         mViewModel = new ViewModelProvider(this).get(AppViewModel.class);
-
-        fileCount = 0;
 
         RecyclerView timelineList = findViewById(R.id.timelineList);
         timelineList.setLayoutManager(new LinearLayoutManager(this));
@@ -72,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             case R.id.edit_timeline:
                                 System.out.println("edit" + position);
+                                editTimeline(position);
                                 return true;
                             default:
                                 return false;
@@ -108,23 +99,27 @@ public class MainActivity extends AppCompatActivity {
         theFragment.show(getSupportFragmentManager(),"a");
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            data.hasExtra("data");
-            Bitmap thumbnail = data.getParcelableExtra("data");
-            boolean hasThumb = thumbnail == null;
-            Uri fullPhotoUri = data.getData();
-            fullPhotoUri.toString();
-            //mViewModel.saveUri(fullPhotoUri, true);
-        }
-        else if (requestCode == 2 && resultCode == RESULT_OK){
-            System.out.println(data);
-            Uri theUri = Uri.parse(filePath);
-            //mViewModel.saveUri(theUri, false);
-        }
-    }*/
+    public void editTimeline (int id) {
+        DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
+            @Override
+            public void positive(String title, String description, boolean showTimes) {
+                String newTitle = null;
+                String newText = null;
+                if(!title.isEmpty()){
+                    System.out.println("title changed");
+                    newTitle = title;
+                }
+                if(!description.isEmpty()){
+                    System.out.println("description changed");
+                    newText = description;
+                }
+                if (!title.isEmpty() || !description.isEmpty()) {
+                    mViewModel.editTimeline(id, newTitle, newText, showTimes);
+                }
+            }
+        },R.string.edit);
+        dialogFragment.show(getSupportFragmentManager(),"b");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {

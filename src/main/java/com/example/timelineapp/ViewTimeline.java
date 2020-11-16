@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +53,8 @@ public class ViewTimeline extends AppCompatActivity {
             @Override
             public void onChanged(Timeline timeline) {
                 boolean showTimes = timeline.showTimes;
+                TextView description = findViewById(R.id.timelineDescription);
+                description.setText(timeline.description);
             }
         });
         mViewModel.setTimeline(id);
@@ -83,7 +85,7 @@ public class ViewTimeline extends AppCompatActivity {
                                 takeImage(position);
                                 return true;
                             case R.id.edit_entry:
-                                addEntry(position,true);
+                                editEntry(position);
                                 return true;
                             case R.id.edit_entry_time:
                                 editTime();
@@ -167,23 +169,30 @@ public class ViewTimeline extends AppCompatActivity {
                 if (!edit){
                     mViewModel.addEntry(title,description,1);
                 }
-                else{
-                    String newTitle = null;
-                    String newText = null;
-                    if(!title.isEmpty()){
-                        System.out.println("title changed");
-                        newTitle = title;
-                    }
-                    if(!description.isEmpty()){
-                        System.out.println("description changed");
-                        newText = description;
-                    }
-                    if (!title.isEmpty() || !description.isEmpty()) {
-                        mViewModel.editEntry(id, newTitle, newText);
-                    }
-                }
             }
         },R.string.add_entries);
+        dialogFragment.show(getSupportFragmentManager(),"a");
+    }
+
+    public void editEntry(Integer id) {
+        DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
+            @Override
+            public void positive(String title, String description, boolean showTimes) {
+                String newTitle = null;
+                String newText = null;
+                if(!title.isEmpty()){
+                    System.out.println("title changed");
+                    newTitle = title;
+                }
+                if(!description.isEmpty()){
+                    System.out.println("description changed");
+                    newText = description;
+                }
+                if (!title.isEmpty() || !description.isEmpty()) {
+                    mViewModel.editEntry(id, newTitle, newText);
+                }
+            }
+        },R.string.entry_edit);
         dialogFragment.show(getSupportFragmentManager(),"a");
     }
 

@@ -23,6 +23,10 @@ public class AppViewModel extends AndroidViewModel {
         mRepository.addTimeline(name,description,showTimes);
     }
 
+    public void editTimeline (int id, String name,String description, Boolean showTimes) {
+        mRepository.editTimeline(id, name,description,showTimes);
+    }
+
     public void deleteTimeline (int id) {
         mRepository.deleteTimeline(id);
     }
