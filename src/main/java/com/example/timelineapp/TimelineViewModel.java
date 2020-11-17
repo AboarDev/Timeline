@@ -1,5 +1,6 @@
 package com.example.timelineapp;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public class TimelineViewModel extends AndroidViewModel {
+    @SuppressLint("SimpleDateFormat")
     static SimpleDateFormat formatTime = new SimpleDateFormat("dd/MM/yyyy - h:mm");
     private Repository mRepository;
     private Integer selected;

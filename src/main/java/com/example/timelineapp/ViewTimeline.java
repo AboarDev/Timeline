@@ -48,7 +48,7 @@ public class ViewTimeline extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.timelineBar);
         Bundle extras = getIntent().getExtras();
         String name = extras.getString(Intent.EXTRA_TITLE,"Not found");
-        Integer id = extras.getInt(Intent.EXTRA_INDEX,-1);
+        int id = extras.getInt(Intent.EXTRA_INDEX,-1);
         mViewModel.getTimeline(id).observe(this, new Observer<Timeline>() {
             @Override
             public void onChanged(Timeline timeline) {
@@ -153,22 +153,19 @@ public class ViewTimeline extends AppCompatActivity {
 
 
     public void getContent (int id) {
-        final int REQUEST_IMAGE_GET = id;
         requests.put(id, 1);
         Intent theIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         theIntent.setType("image/*");
         if (theIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(theIntent, REQUEST_IMAGE_GET);
+            startActivityForResult(theIntent, id);
         }
     }
 
-    public void addEntry (Integer id,boolean edit) {
+    public void addEntry () {
         DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
             @Override
             public void positive(String title, String description, boolean showTimes) {
-                if (!edit){
                     mViewModel.addEntry(title,description,1);
-                }
             }
         },R.string.add_entries);
         dialogFragment.show(getSupportFragmentManager(),"a");
@@ -209,12 +206,10 @@ public class ViewTimeline extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.add_entries:
-                addEntry(null,false);
-            default:
-                return false;
+        if (item.getItemId() == R.id.add_entries) {
+            addEntry();
         }
+        return false;
     }
 
     @Override

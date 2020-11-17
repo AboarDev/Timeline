@@ -27,7 +27,7 @@ public class Timeline {
 
     }
 
-    public Timeline(String name, String description, Boolean showTimes)  {
+    public Timeline(@NonNull String name, String description, @NonNull Boolean showTimes)  {
         this.localOnly = true;
         this.name = name;
         this.description = description;

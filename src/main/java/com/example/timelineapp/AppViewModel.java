@@ -1,7 +1,6 @@
 package com.example.timelineapp;
 
 import android.app.Application;
-import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;

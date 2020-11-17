@@ -27,7 +27,12 @@ public abstract class ModelDatabase extends RoomDatabase {
     public abstract EntryDao entryDao();
     public abstract MediaBindingDao mediaBindingDao();
 
-
+    public synchronized static ModelDatabase getInstance(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = getDatabase(context);
+        }
+        return INSTANCE;
+    }
 
     private static volatile ModelDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -38,7 +43,27 @@ public abstract class ModelDatabase extends RoomDatabase {
             synchronized (ModelDatabase.class){
                 if (INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ModelDatabase.class,"timeline_database").addMigrations(MIGRATION_2_3).build();
+                            ModelDatabase.class,"timeline_database")
+                            .addMigrations(MIGRATION_2_3).addCallback(new RoomDatabase.Callback() {
+                        public void onCreate (@NonNull SupportSQLiteDatabase db) {
+                            super.onOpen(db);
+                            Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getInstance(context)
+                                            .timelineDao()
+                                            .insert(
+                                            new Timeline("Example",
+                                                    "A simple example timeline",
+                                                    false));
+                                }
+                            });
+                        }
+                        public void onOpen (@NonNull SupportSQLiteDatabase db) {
+                            // do something every time database is open
+                            super.onOpen(db);
+                        }
+                    }).build();
                 }
             }
         }
