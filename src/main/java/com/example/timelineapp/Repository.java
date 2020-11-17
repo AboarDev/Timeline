@@ -85,6 +85,14 @@ public class Repository {
         });
     }
 
+    public void removeImage(int id){
+        ModelDatabase.databaseWriteExecutor.execute(() -> {
+            Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
+            entry.URI = null;
+            mEntryDao.update(entry);
+        });
+    }
+
     public void editTimeline (int id, String name,String description, Boolean showTimes) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Timeline timeline = mTimeLineDao.getByID(id);

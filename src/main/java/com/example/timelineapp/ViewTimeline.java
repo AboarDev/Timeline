@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,7 +35,7 @@ public class ViewTimeline extends AppCompatActivity {
 
     public ViewTimeline() {
         super();
-        requests = new HashMap<Integer, Integer>();
+        requests = new HashMap<>();
     }
 
     @Override
@@ -47,52 +45,46 @@ public class ViewTimeline extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(TimelineViewModel.class);
         Toolbar myToolbar = findViewById(R.id.timelineBar);
         Bundle extras = getIntent().getExtras();
-        String name = extras.getString(Intent.EXTRA_TITLE,"Not found");
         int id = extras.getInt(Intent.EXTRA_INDEX,-1);
-        mViewModel.getTimeline(id).observe(this, new Observer<Timeline>() {
-            @Override
-            public void onChanged(Timeline timeline) {
-                boolean showTimes = timeline.showTimes;
-                TextView description = findViewById(R.id.timelineDescription);
-                description.setText(timeline.description);
-            }
+        mViewModel.getTimeline(id).observe(this, timeline -> {
+            boolean showTimes = timeline.showTimes;
+            TextView description = findViewById(R.id.timelineDescription);
+            description.setText(timeline.description);
+            myToolbar.setTitle(timeline.name);
         });
         mViewModel.setTimeline(id);
-        myToolbar.setTitle(name);
 
         setSupportActionBar(myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         RecyclerView entryList = findViewById(R.id.entryList);
         entryList.setLayoutManager(new LinearLayoutManager(this));
-        entryList.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        entryList.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
         EntryAdapter theAdapter = new EntryAdapter(new EntryAdapter.ClickHandler() {
             @Override
             public void click(View v,int position) {
                 PopupMenu popupMenu = new PopupMenu(ViewTimeline.this,v);
                 MenuInflater menuInflater = popupMenu.getMenuInflater();
                 menuInflater.inflate(R.menu.entry_context_menu,popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case R.id.add_image:
-                                getContent(position);
-                                return true;
-                            case R.id.delete:
-                                mViewModel.deleteEntry(position);
-                                return true;
-                            case R.id.new_image:
-                                takeImage(position);
-                                return true;
-                            case R.id.edit_entry:
-                                editEntry(position);
-                                return true;
-                            case R.id.edit_entry_time:
-                                editTime();
-                                return true;
-                            default:
-                                return false;
-                        }
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()){
+                        case R.id.add_image:
+                            getContent(position);
+                            return true;
+                        case R.id.delete:
+                            mViewModel.deleteEntry(position);
+                            return true;
+                        case R.id.remove_image:
+                            mViewModel.removeImage(position);
+                            return true;
+                        case R.id.edit_entry:
+                            editEntry(position);
+                            return true;
+                        case R.id.edit_entry_time:
+                            editTime();
+                            return true;
+                        default:
+                            return false;
                     }
                 });
                 popupMenu.show();
@@ -100,12 +92,7 @@ public class ViewTimeline extends AppCompatActivity {
         });
         entryList.setAdapter(theAdapter);
 
-        mViewModel.getAllEntries().observe(this, new Observer<List<Entry>>() {
-            @Override
-            public void onChanged(List<Entry> entries) {
-                theAdapter.setItems(entries);
-            }
-        });
+        mViewModel.getAllEntries().observe(this, theAdapter::setItems);
     }
 
     @Override
@@ -127,7 +114,8 @@ public class ViewTimeline extends AppCompatActivity {
 
     public File createFile() throws IOException {
         File dir = getExternalFilesDir("my_images");
-        File image = File.createTempFile(String.valueOf(fileCount) + "thisisafilename",".jpg",dir);
+        File image = File.createTempFile(String.valueOf(fileCount) +
+                "thisisafilename",".jpg",dir);
         filePath = image.getAbsolutePath();
         fileCount++;
         return image;
@@ -144,7 +132,8 @@ public class ViewTimeline extends AppCompatActivity {
 
             }
             if (image != null){
-                Uri theUri = FileProvider.getUriForFile(this,"com.example.android.fileprovider",image);
+                Uri theUri = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",image);
                 theIntent.putExtra(MediaStore.EXTRA_OUTPUT, theUri);
                 startActivityForResult(theIntent, id);
             }

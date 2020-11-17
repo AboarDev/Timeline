@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class CreateTimeline extends DialogFragment {
 
     public abstract static class ClickHandler{
-
         public abstract void positive(String title, String description, boolean showTimes);
-
     };
 
     public CreateTimeline(ClickHandler theHandler){
@@ -31,6 +30,7 @@ public class CreateTimeline extends DialogFragment {
 
     private int message;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

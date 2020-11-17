@@ -45,4 +45,7 @@ public class TimelineViewModel extends AndroidViewModel {
     public void editEntry(int id, String title, String text){
         mRepository.editEntry(id,title,text);
     }
+    public void removeImage(int id){
+        mRepository.removeImage(id);
+    }
 }

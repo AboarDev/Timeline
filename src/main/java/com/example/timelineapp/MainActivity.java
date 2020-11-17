@@ -3,7 +3,6 @@ package com.example.timelineapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,9 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView timelineList = findViewById(R.id.timelineList);
         timelineList.setLayoutManager(new LinearLayoutManager(this));
-        timelineList.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        timelineList.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
         TimelineAdapter theAdapter = new TimelineAdapter(new TimelineAdapter.ClickHandler() {
             @Override
             public void click(int position,String title) {
@@ -52,34 +49,28 @@ public class MainActivity extends AppCompatActivity {
                 PopupMenu popupMenu = new PopupMenu(MainActivity.this,v);
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.timeline_menu,popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case R.id.delete_timeline:
-                                System.out.println("delete" + position);
-                                mViewModel.deleteTimeline(position);
-                                return true;
-                            case R.id.edit_timeline:
-                                System.out.println("edit" + position);
-                                editTimeline(position);
-                                return true;
-                            default:
-                                return false;
-                        }
-
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()){
+                        case R.id.delete_timeline:
+                            System.out.println("delete" + position);
+                            mViewModel.deleteTimeline(position);
+                            return true;
+                        case R.id.edit_timeline:
+                            System.out.println("edit" + position);
+                            editTimeline(position);
+                            return true;
+                        default:
+                            return false;
                     }
+
                 });
                 popupMenu.show();
             }
         });
         timelineList.setAdapter(theAdapter);
-        mViewModel.getAllTimelines().observe(this, new Observer<List<Timeline>>() {
-            @Override
-            public void onChanged(List<Timeline> timelines) {
-                System.out.println(timelines.size());
-                theAdapter.setItems(timelines);
-            }
+        mViewModel.getAllTimelines().observe(this, timelines -> {
+            System.out.println(timelines.size());
+            theAdapter.setItems(timelines);
         });
     }
 

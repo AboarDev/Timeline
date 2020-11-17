@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -37,12 +38,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
             mPos = mView.findViewById(R.id.EntryPOS);
             mTextBody = mView.findViewById(R.id.EntryBody);
             mImage = mView.findViewById(R.id.EntryImage);
-            mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.click(v,id);
-                }
-            });
+            mView.setOnClickListener(v -> clickHandler.click(v,id));
         }
     }
 
@@ -51,6 +47,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -59,7 +56,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (mEntries != null){
             Entry entry = mEntries.get(position);
             holder.mTitle.setText(entry.title);

@@ -7,6 +7,9 @@
         android:id="@+id/add_image"
         android:title="@string/add_image" />
     <item
+        android:id="@+id/remove_image"
+        android:title="@string/remove_image" />
+    <item
         android:id="@+id/new_image"
         android:title="@string/new_image"
         android:visible="false"/>

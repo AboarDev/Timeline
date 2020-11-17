@@ -41,18 +41,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
             mTimelineTitle = theView.findViewById(R.id.timelineTitle);
             mItemCount = theView.findViewById(R.id.timelineContents);
             mMenu = theView.findViewById(R.id.timelineOptions);
-            mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.click(mID,title);
-                }
-            });
-            mMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickHandler.makeMenu(v,mID);
-                }
-            });
+            mView.setOnClickListener(v -> clickHandler.click(mID,title));
+            mMenu.setOnClickListener(v -> clickHandler.makeMenu(v,mID));
         }
 
     }
@@ -70,16 +60,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (mTimelines != null){
             holder.mTimelineTitle.setText(mTimelines.get(position).name);
             holder.mItemCount.setText(mTimelines.get(position).description);
             holder.mID = mTimelines.get(position).timelineID;
             holder.title = mTimelines.get(position).name;
-        }else {
-            holder.mTimelineTitle.setText("blank");
-            holder.mItemCount.setText("blank");
-            holder.mID = -1;
         }
     }
 
