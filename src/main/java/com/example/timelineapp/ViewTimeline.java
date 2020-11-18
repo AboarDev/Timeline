@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.transition.Explode;
 
 import android.content.Intent;
@@ -20,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -54,7 +54,7 @@ public class ViewTimeline extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(TimelineViewModel.class);
         Toolbar myToolbar = findViewById(R.id.timelineBar);
         Bundle extras = getIntent().getExtras();
-        id = extras.getInt(Intent.EXTRA_INDEX,-1);
+        id = extras.getInt(Intent.EXTRA_INDEX, -1);
         showTimes = extras.getBoolean("SHOW_TIMES");
         setSupportActionBar(myToolbar);
 
@@ -63,14 +63,14 @@ public class ViewTimeline extends AppCompatActivity {
         entryList.setLayoutManager(new LinearLayoutManager(this));
         entryList.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
-        EntryAdapter theAdapter = new EntryAdapter(showTimes,new EntryAdapter.ClickHandler() {
+        EntryAdapter theAdapter = new EntryAdapter(showTimes, new EntryAdapter.ClickHandler() {
             @Override
-            public void click(View v,int position) {
-                PopupMenu popupMenu = new PopupMenu(ViewTimeline.this,v);
+            public void click(View v, int position) {
+                PopupMenu popupMenu = new PopupMenu(ViewTimeline.this, v);
                 MenuInflater menuInflater = popupMenu.getMenuInflater();
-                menuInflater.inflate(R.menu.entry_context_menu,popupMenu.getMenu());
+                menuInflater.inflate(R.menu.entry_context_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.add_image:
                             getContent(position);
                             return true;
@@ -96,6 +96,16 @@ public class ViewTimeline extends AppCompatActivity {
         entryList.setAdapter(theAdapter);
 
         mViewModel.getAllEntries(id).observe(this, theAdapter::setItems);
+        mViewModel.getTimeline(id).observe(this, timeline -> {
+            myToolbar.setTitle(timeline.name);
+            TextView description = findViewById(R.id.timelineDescription);
+            if (timeline.description == null || !timeline.description.isEmpty()) {
+                description.setText(timeline.description);
+            } else {
+                description.setVisibility(View.GONE);
+                //findViewById(R.id.descriptionDivider).setVisibility(View.GONE);
+            }
+        });
     }
 
 
@@ -108,7 +118,7 @@ public class ViewTimeline extends AppCompatActivity {
             //Bitmap thumbnail = data.getParcelableExtra("data");
             Uri fullPhotoUri = data.getData();
             String URIString = fullPhotoUri.toString();
-            mViewModel.setURI(requestCode,URIString);
+            mViewModel.setURI(requestCode, URIString);
             System.out.println(requests.remove(requestCode));
         } else if (requestType == 2 && resultCode == RESULT_OK) {
             System.out.println(requests.remove(requestCode));
@@ -119,25 +129,25 @@ public class ViewTimeline extends AppCompatActivity {
     public File createFile() throws IOException {
         File dir = getExternalFilesDir("my_images");
         File image = File.createTempFile(String.valueOf(fileCount) +
-                "thisisafilename",".jpg",dir);
+                "thisisafilename", ".jpg", dir);
         filePath = image.getAbsolutePath();
         fileCount++;
         return image;
     }
 
-    public void takeImage (int id) {
+    public void takeImage(int id) {
         requests.put(id, 2);
         Intent theIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(theIntent.resolveActivity(getPackageManager()) != null){
+        if (theIntent.resolveActivity(getPackageManager()) != null) {
             File image = null;
-            try{
+            try {
                 image = createFile();
-            } catch (IOException exception){
+            } catch (IOException exception) {
 
             }
-            if (image != null){
+            if (image != null) {
                 Uri theUri = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",image);
+                        "com.example.android.fileprovider", image);
                 theIntent.putExtra(MediaStore.EXTRA_OUTPUT, theUri);
                 startActivityForResult(theIntent, id);
             }
@@ -145,7 +155,7 @@ public class ViewTimeline extends AppCompatActivity {
     }
 
 
-    public void getContent (int id) {
+    public void getContent(int id) {
         requests.put(id, 1);
         Intent theIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         theIntent.setType("image/*");
@@ -154,14 +164,14 @@ public class ViewTimeline extends AppCompatActivity {
         }
     }
 
-    public void addEntry () {
+    public void addEntry() {
         DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
             @Override
             public void positive(String title, String description, boolean showTimes) {
-                    mViewModel.addEntry(id,title,description,1);
+                mViewModel.addEntry(id, title, description, 1);
             }
-        },R.string.add_entries);
-        dialogFragment.show(getSupportFragmentManager(),"a");
+        }, R.string.add_entries);
+        dialogFragment.show(getSupportFragmentManager(), "a");
     }
 
     public void editEntry(Integer id) {
@@ -170,11 +180,11 @@ public class ViewTimeline extends AppCompatActivity {
             public void positive(String title, String description, boolean showTimes) {
                 String newTitle = null;
                 String newText = null;
-                if(!title.isEmpty()){
+                if (!title.isEmpty()) {
                     System.out.println("title changed");
                     newTitle = title;
                 }
-                if(!description.isEmpty()){
+                if (!description.isEmpty()) {
                     System.out.println("description changed");
                     newText = description;
                 }
@@ -182,13 +192,13 @@ public class ViewTimeline extends AppCompatActivity {
                     mViewModel.editEntry(id, newTitle, newText);
                 }
             }
-        },R.string.entry_edit);
-        dialogFragment.show(getSupportFragmentManager(),"a");
+        }, R.string.entry_edit);
+        dialogFragment.show(getSupportFragmentManager(), "a");
     }
 
-    public void editTime () {
+    public void editTime() {
         DialogFragment dialogFragment = new PickDate();
-        dialogFragment.show(getSupportFragmentManager(),"");
+        dialogFragment.show(getSupportFragmentManager(), "");
     }
 
     @Override
@@ -210,6 +220,7 @@ public class ViewTimeline extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();

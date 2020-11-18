@@ -13,58 +13,62 @@ public class Repository {
     private LiveData<List<Timeline>> mAllTimelines;
     private LiveData<List<Entry>> mAllEntries;
 
-    Repository (Application application) {
+    Repository(Application application) {
         ModelDatabase db = ModelDatabase.getDatabase(application);
         mTimeLineDao = db.timelineDao();
         mEntryDao = db.entryDao();
         mMediaBindingDao = db.mediaBindingDao();
         mAllTimelines = mTimeLineDao.getAllLive();
     }
-    public void addTimeline(String name,String description, Boolean showTimes){
-        Timeline theTimeline = new Timeline(name,description, showTimes);
+
+    public void addTimeline(String name, String description, Boolean showTimes) {
+        Timeline theTimeline = new Timeline(name, description, showTimes);
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             mTimeLineDao.insert(theTimeline);
         });
     }
-    public void addEntry(Integer timelineID, String title, String text, Integer position, String dateTime){
+
+    public void addEntry(Integer timelineID, String title, String text, Integer position, String dateTime) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.insert(new Entry(timelineID,title,text,position,dateTime));
+            mEntryDao.insert(new Entry(timelineID, title, text, position, dateTime));
         });
     }
-    public void addMediaBinding(int id,String str, String type){
-        MediaBinding binding = new MediaBinding(id,str, type);
+
+    public void addMediaBinding(int id, String str, String type) {
+        MediaBinding binding = new MediaBinding(id, str, type);
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             mMediaBindingDao.insert(binding);
         });
     }
-    public LiveData<List<Timeline>> getAllTimelines () {
+
+    public LiveData<List<Timeline>> getAllTimelines() {
         return mAllTimelines;
     }
 
-    public Timeline getTimelineWithID (int id){
+    public Timeline getTimelineWithID(int id) {
         return mTimeLineDao.getByID(id);
     }
 
-    public LiveData<List<Entry>> getAllEntries (int id) {
+    public LiveData<List<Entry>> getAllEntries(int id) {
         return mEntryDao.getAllWithTimelineID(id);
     }
 
-    public void deleteTimeline (int id) {
+    public void deleteTimeline(int id) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
-            for (Entry e:mEntryDao.getWithTimelineID(id)) {
+            for (Entry e : mEntryDao.getWithTimelineID(id)) {
                 mEntryDao.delete(e);
             }
             mTimeLineDao.deleteTimeline(mTimeLineDao.getByID(id));
         });
     }
 
-    public void deleteEntry (int id) {
+    public void deleteEntry(int id) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             mEntryDao.delete(mEntryDao.getWithTimelineIDAndPos(id));
         });
     }
 
-    public void setURI (int id, String uri){
+    public void setURI(int id, String uri) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
             entry.URI = uri;
@@ -72,20 +76,20 @@ public class Repository {
         });
     }
 
-    public void editEntry(int id, String title, String text){
+    public void editEntry(int id, String title, String text) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
-            if(title != null){
+            if (title != null) {
                 entry.title = title;
             }
-            if(text != null){
+            if (text != null) {
                 entry.text = text;
             }
             mEntryDao.update(entry);
         });
     }
 
-    public void removeImage(int id){
+    public void removeImage(int id) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Entry entry = mEntryDao.getWithTimelineIDAndPos(id);
             entry.URI = null;
@@ -93,13 +97,13 @@ public class Repository {
         });
     }
 
-    public void editTimeline (int id, String name,String description, Boolean showTimes) {
+    public void editTimeline(int id, String name, String description, Boolean showTimes) {
         ModelDatabase.databaseWriteExecutor.execute(() -> {
             Timeline timeline = mTimeLineDao.getByID(id);
-            if (name != null){
+            if (name != null) {
                 timeline.name = name;
             }
-            if (description != null){
+            if (description != null) {
                 timeline.description = description;
             }
             mTimeLineDao.updateTimeline(timeline);

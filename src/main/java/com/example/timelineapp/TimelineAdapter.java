@@ -16,17 +16,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     private List<Timeline> mTimelines;
     private ClickHandler clickHandler;
 
-    public TimelineAdapter (ClickHandler clickHandler){
+    public TimelineAdapter(ClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 
-    public abstract static class ClickHandler{
+    public abstract static class ClickHandler {
 
-        public abstract void click(int position,boolean showTimes);
+        public abstract void click(int position, boolean showTimes);
 
-        public abstract void makeMenu (View v, int position);
+        public abstract void makeMenu(View v, int position);
 
-    };
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View mView;
@@ -35,19 +35,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
         public ImageButton mMenu;
         public int mID;
         public boolean mShowTimes;
+
         public MyViewHolder(View theView) {
             super(theView);
             mView = theView;
             mTimelineTitle = theView.findViewById(R.id.timelineTitle);
             mItemCount = theView.findViewById(R.id.timelineContents);
             mMenu = theView.findViewById(R.id.timelineOptions);
-            mView.setOnClickListener(v -> clickHandler.click(mID,mShowTimes));
-            mMenu.setOnClickListener(v -> clickHandler.makeMenu(v,mID));
+            mView.setOnClickListener(v -> clickHandler.click(mID, mShowTimes));
+            mMenu.setOnClickListener(v -> clickHandler.makeMenu(v, mID));
         }
 
     }
 
-    void setItems (List<Timeline> timelines){
+    void setItems(List<Timeline> timelines) {
         mTimelines = timelines;
         notifyDataSetChanged();
     }
@@ -55,13 +56,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.timeline_fragment, parent,false);
+                .inflate(R.layout.timeline_fragment, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        if (mTimelines != null){
+        if (mTimelines != null) {
             Timeline timeline = mTimelines.get(position);
             holder.mTimelineTitle.setText(timeline.name);
             holder.mItemCount.setText(timeline.description);
@@ -72,9 +73,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.MyView
 
     @Override
     public int getItemCount() {
-        if (mTimelines != null){
+        if (mTimelines != null) {
             return mTimelines.size();
-        } else{
+        } else {
             return 0;
         }
     }
