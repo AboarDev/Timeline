@@ -8,15 +8,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.transition.Explode;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -32,6 +36,8 @@ public class ViewTimeline extends AppCompatActivity {
     Map<Integer, Integer> requests;
     String filePath;
     int fileCount;
+    int id;
+    boolean showTimes;
 
     public ViewTimeline() {
         super();
@@ -41,26 +47,23 @@ public class ViewTimeline extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Fade());
+
         setContentView(R.layout.activity_view_timeline);
         mViewModel = new ViewModelProvider(this).get(TimelineViewModel.class);
         Toolbar myToolbar = findViewById(R.id.timelineBar);
         Bundle extras = getIntent().getExtras();
-        int id = extras.getInt(Intent.EXTRA_INDEX,-1);
-        mViewModel.getTimeline(id).observe(this, timeline -> {
-            boolean showTimes = timeline.showTimes;
-            TextView description = findViewById(R.id.timelineDescription);
-            description.setText(timeline.description);
-            myToolbar.setTitle(timeline.name);
-        });
-        mViewModel.setTimeline(id);
-
+        id = extras.getInt(Intent.EXTRA_INDEX,-1);
+        showTimes = extras.getBoolean("SHOW_TIMES");
         setSupportActionBar(myToolbar);
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         RecyclerView entryList = findViewById(R.id.entryList);
         entryList.setLayoutManager(new LinearLayoutManager(this));
         entryList.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
-        EntryAdapter theAdapter = new EntryAdapter(new EntryAdapter.ClickHandler() {
+        EntryAdapter theAdapter = new EntryAdapter(showTimes,new EntryAdapter.ClickHandler() {
             @Override
             public void click(View v,int position) {
                 PopupMenu popupMenu = new PopupMenu(ViewTimeline.this,v);
@@ -92,8 +95,9 @@ public class ViewTimeline extends AppCompatActivity {
         });
         entryList.setAdapter(theAdapter);
 
-        mViewModel.getAllEntries().observe(this, theAdapter::setItems);
+        mViewModel.getAllEntries(id).observe(this, theAdapter::setItems);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,7 +158,7 @@ public class ViewTimeline extends AppCompatActivity {
         DialogFragment dialogFragment = new CreateTimeline(new CreateTimeline.ClickHandler() {
             @Override
             public void positive(String title, String description, boolean showTimes) {
-                    mViewModel.addEntry(title,description,1);
+                    mViewModel.addEntry(id,title,description,1);
             }
         },R.string.add_entries);
         dialogFragment.show(getSupportFragmentManager(),"a");

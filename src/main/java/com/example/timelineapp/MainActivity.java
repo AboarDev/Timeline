@@ -8,8 +8,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
+import android.transition.Explode;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setEnterTransition(new Fade());
+        getWindow().setExitTransition(new Fade());
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -36,12 +43,12 @@ public class MainActivity extends AppCompatActivity {
                 DividerItemDecoration.VERTICAL));
         TimelineAdapter theAdapter = new TimelineAdapter(new TimelineAdapter.ClickHandler() {
             @Override
-            public void click(int position,String title) {
+            public void click(int position,boolean showTimes) {
                 System.out.println(position);
                 Intent theIntent = new Intent(MainActivity.this, ViewTimeline.class);
                 theIntent.putExtra(Intent.EXTRA_INDEX,position);
-                theIntent.putExtra(Intent.EXTRA_TITLE,title);
-                startActivity(theIntent);
+                theIntent.putExtra("SHOW_TIMES",showTimes);
+                startActivity(theIntent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
             }
 
             @Override

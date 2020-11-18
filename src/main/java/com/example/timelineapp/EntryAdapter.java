@@ -16,9 +16,11 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
 
     private List<Entry> mEntries;
     private EntryAdapter.ClickHandler clickHandler;
+    private boolean showTimes;
 
-    public EntryAdapter (EntryAdapter.ClickHandler clickHandler){
+    public EntryAdapter (boolean showTimes, EntryAdapter.ClickHandler clickHandler){
         this.clickHandler = clickHandler;
+        this.showTimes = showTimes;
     }
     public abstract static class ClickHandler{
         public abstract void click(View v,int position);
@@ -59,13 +61,22 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (mEntries != null){
             Entry entry = mEntries.get(position);
-            holder.mTitle.setText(entry.title);
-            holder.mTextBody.setText(entry.text);
+            if (!entry.title.isEmpty()){
+                holder.mTitle.setText(entry.title);
+            } else {
+                holder.mTitle.setVisibility(View.GONE);
+            }
+            if (!entry.text.isEmpty()){
+                holder.mTextBody.setText(entry.text);
+            } else{
+                holder.mTextBody.setVisibility(View.GONE);
+            }
+
             holder.id = entry.entryID;
-            if (entry.dateTime != null){
+            if (entry.dateTime != null && showTimes){
                 holder.mPos.setText(entry.dateTime);
             } else{
-                holder.mPos.setText((position + 1) +".");
+                holder.mPos.setText((position + 1) + ".");
             }
             if (entry.URI != null){
                 holder.mImage.setImageURI(Uri.parse(entry.URI));
