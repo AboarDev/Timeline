@@ -1,6 +1,9 @@
 package com.example.timelineapp;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -34,6 +37,16 @@ public abstract class ModelDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    public static Uri getURI(Context context, int id){
+        Resources resources = context.getResources();
+        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                .authority(resources.getResourcePackageName(id))
+                .appendPath(resources.getResourceTypeName(id))
+                .appendPath(resources.getResourceEntryName(id))
+                .build();
+        return uri;
+    }
+
     private static volatile ModelDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
@@ -50,12 +63,30 @@ public abstract class ModelDatabase extends RoomDatabase {
                             Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    getInstance(context)
-                                            .timelineDao()
-                                            .insert(
-                                            new Timeline("Example",
-                                                    "A simple example timeline",
-                                                    false));
+                                    //Improved examples for initial prototype
+                                    ModelDatabase modelDatabase = getInstance(context);
+                                    Timeline timeline = new Timeline("Example",
+                                            "A simple example timeline without times shown",
+                                            false);
+                                    modelDatabase.timelineDao().insert(timeline);
+                                    int id = modelDatabase.timelineDao().getByName("Example")
+                                            .timelineID;
+                                    Entry entry = new Entry(id,"An example entry",
+                                            "This entry has no images",1,"");
+                                    entry.URI = getURI(context,R.raw.old_image).toString();
+                                    modelDatabase.entryDao().insert(entry);
+                                    entry = new Entry(id,"Another entry","This Entry has an image",2,
+                                            "");
+                                    /*Resources resources = context.getResources();
+                                    Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                                            .authority(resources.getResourcePackageName(R.raw.old_image))
+                                            .appendPath(resources.getResourceTypeName(R.raw.old_image))
+                                            .appendPath(resources.getResourceEntryName(R.raw.old_image))
+                                            .build();*/
+                                    entry.URI = getURI(context,R.raw.m20200816_153134).toString();
+                                    modelDatabase.entryDao().insert(entry);
+                                    timeline = new Timeline("Example #2","A simple example timeline with times shown",true);
+                                    modelDatabase.timelineDao().insert(timeline);
                                 }
                             });
                         }
