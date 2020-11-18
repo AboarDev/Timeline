@@ -11,5 +11,6 @@
         android:id="@+id/edit_current_timeline"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="@string/edit"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>
