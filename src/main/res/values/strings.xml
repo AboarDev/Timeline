@@ -19,4 +19,6 @@
     <string name="edit_entry_time">Edit Entry Time</string>
     <string name="description">Entry Image</string>
     <string name="remove_image">Remove Image</string>
+    <string name="entry_menu">Entry Menu</string>
+    <string name="timeline_options">Timeline Options</string>
 </resources>

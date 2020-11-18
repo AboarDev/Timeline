@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.transition.Explode;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,7 +45,7 @@ public class ViewTimeline extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setEnterTransition(new Fade());
+        getWindow().setEnterTransition(new Slide());
         getWindow().setExitTransition(new Fade());
 
         setContentView(R.layout.activity_view_timeline);
@@ -223,6 +221,7 @@ public class ViewTimeline extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        super.onBackPressed();
         finish();
         return true;
     }
