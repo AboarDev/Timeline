@@ -168,7 +168,7 @@ public class ViewTimeline extends AppCompatActivity {
             public void positive(String title, String description, boolean showTimes) {
                 mViewModel.addEntry(id, title, description, 1);
             }
-        }, R.string.add_entries);
+        }, R.string.add_entries,false);
         dialogFragment.show(getSupportFragmentManager(), "a");
     }
 
@@ -190,7 +190,7 @@ public class ViewTimeline extends AppCompatActivity {
                     mViewModel.editEntry(id, newTitle, newText);
                 }
             }
-        }, R.string.entry_edit);
+        }, R.string.entry_edit,false);
         dialogFragment.show(getSupportFragmentManager(), "a");
     }
 

@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     mViewModel.editTimeline(id, newTitle, newText, showTimes);
                 }
             }
-        },R.string.edit);
+        },R.string.edit,true);
         dialogFragment.show(getSupportFragmentManager(),"b");
     }
 

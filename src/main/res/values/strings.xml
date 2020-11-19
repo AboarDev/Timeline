@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Timeline</string>
+    <string name="app_name">MakeTimeline</string>
     <string name="heading">My Timelines</string>
     <string name="timeline_name">Enter Name</string>
     <string name="timeline_description">Enter Description (optional)</string>
